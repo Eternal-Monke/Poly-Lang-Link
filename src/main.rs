@@ -1,5 +1,7 @@
 
-use std::process::Command;
+mod audio_extractor;
+mod translator;
+
 use std::env;
 use std::path::Path;
 
@@ -12,23 +14,22 @@ fn main() {
         std::process::exit(1);
     }
 
-    let input = &args[1];
-    let output = &args[2];
+    let og_video_path = &args[1];
+    let audio_path = &args[2];
+    let model_path = "models/ggml-base.bin";
 
-    if !Path::new(input).exists() {
-        eprintln!("Error: input file '{}' does not exist.", input);
+    if !Path::new(og_video_path).exists() {
+        eprintln!("Input file '{}' does not exist.", og_video_path);
         std::process::exit(1);
     }
 
-    let status = Command::new("ffmpeg").args(["-i", input, "-q:a", "0", "-map", "a", output,]).status();
-    
-    match status {
-        Ok(_) => {},
-        Err(error) => {
-            println!("Failed to start ffmpeg error encountered is {}", error);
-            std::process::exit(1);
-        }
-    }
+    match audio_extractor::extract_audio(og_video_path, audio_path)?;
 
+    let translated = translator::translate_audio(model_path, audio_path)?;
+
+    let translated_path = Path::new(audio_path).with_extension("txt");
+    std::fs::write(&translated_path, &translated)?;
+
+    println!("Transcript saved to {}", translated_path.display());
 
 }
