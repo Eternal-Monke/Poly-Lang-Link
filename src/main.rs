@@ -5,7 +5,7 @@ mod translator;
 use std::env;
 use std::path::Path;
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let args: Vec<String> = env::args().collect();
 
@@ -23,7 +23,7 @@ fn main() {
         std::process::exit(1);
     }
 
-    match audio_extractor::extract_audio(og_video_path, audio_path)?;
+    audio_extractor::extract_audio(og_video_path, audio_path)?;
 
     let translated = translator::translate_audio(model_path, audio_path)?;
 
@@ -31,5 +31,7 @@ fn main() {
     std::fs::write(&translated_path, &translated)?;
 
     println!("Transcript saved to {}", translated_path.display());
+
+    Ok(())
 
 }

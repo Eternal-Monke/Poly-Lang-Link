@@ -1,17 +1,17 @@
 
 use std::process::{Command, Stdio};
-use std::path::Path;
 
-pub fn extract_audio(input: &str, output: &str) {
+pub fn extract_audio(input: &str, output: &str) -> Result<(), Box<dyn std::error::Error>> {
 
     let status = Command::new("ffmpeg").args(
-        ["-i", input, "-vn", "-acodec", "-mp3", output,]
+        ["-i", input,"-vn", "-ac", "1", "-ar", "16000", "-sample_fmt", "s16", output]
     ).stdout(Stdio::null()).stderr(Stdio::null()).status();
     
     match status {
         Ok(out) => {
             if out.success() {
                 println!("Audio extracted successfully to '{}'", output);
+                Ok(())
             } else {
                 eprintln!("ffmpeg failed. Make sure it's installed.");
                 std::process::exit(1);
@@ -22,6 +22,5 @@ pub fn extract_audio(input: &str, output: &str) {
             std::process::exit(1);
         }
     }
-
 
 }
