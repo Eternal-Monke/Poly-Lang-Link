@@ -1,6 +1,6 @@
 # Poly-Lang-Link (PLL)
 
-**Poly-Lang-Link (PLL)** is a multimedia processing tool that extracts, translates, and synchronizes anime dialogue across languages. It is built to support real-time workflows using modern audio and video processing libraries.
+**Poly-Lang-Link (PLL)** is a multimedia processing tool that extracts, translates, and synchronizes dialogue across languages. It is built to support real-time workflows using modern audio and video processing libraries.
 
 ![Rust](https://img.shields.io/badge/language-Rust-orange?logo=rust&logoColor=black)
 
